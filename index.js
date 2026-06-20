@@ -12,7 +12,7 @@ app.use(express.static('public'));
 let students = [
   { id: 1, name: "Aisha Bello", age: 20, course: "Computer Science" },
   { id: 2, name: "Tunde Ade", age: 22, course: "Mass Comm" },
-  { id: 3, name: "Jude Kola", age: 27, course: "Cybersecurity" },
+  { id: 3, name: "Doyin Adetunji", age: 27, course: "Cybersecurity" },
 ];
 
 // 1. GET all students
