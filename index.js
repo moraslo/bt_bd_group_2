@@ -6,13 +6,16 @@ const port = process.env.PORT || 3030;
 
 // Middleware to read JSON from request body
 app.use(express.json());
-app.use(express.static('public'));
+
+app.use((err, req, res, next) => {
+    console.err(err.stack);
+    res.status(500).json({error: "Something went wrong"});
+  });
 
 // In-memory student array. Replace with DB later
 let students = [
   { id: 1, name: "Aisha Bello", age: 20, course: "Computer Science" },
-  { id: 2, name: "Tunde Ade", age: 22, course: "Mass Comm" },
-  { id: 3, name: "Doyin Adetunji", age: 27, course: "Cybersecurity" },
+  { id: 2, name: "Tunde Ade", age: 22, course: "Mass Comm" }
 ];
 
 // 1. GET all students
@@ -54,9 +57,9 @@ app.put('/students/:id', (req, res) => {
   if (!student) return res.status(404).json({ error: "Student not found" });
 
   const { name, age, course } = req.body;
-  if (name !== undefined) student.name = name;
-  if (age !== undefined) student.age = age;
-  if (course !== undefined) student.course = course;
+  if (name) student.name = name;
+  if (age) student.age = age;
+  if (course) student.course = course;
 
   res.json(student);
 });
@@ -64,9 +67,6 @@ app.put('/students/:id', (req, res) => {
 // 5. DELETE student
 app.delete('/students/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const student = students.find(s => s.id === id);
-  if (!student) return res.status(404).json({ error: "Student not found" });
-
   students = students.filter(s => s.id !== id);
   res.json({ message: "Student deleted successfully" });
 });
@@ -74,10 +74,5 @@ app.delete('/students/:id', (req, res) => {
 app.get('/fail', (req, res) => {
     throw new Error("Ooops");
   });
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong" });
-});
   
 app.listen(port, () => console.log(`API running on http://localhost:${port}`));
